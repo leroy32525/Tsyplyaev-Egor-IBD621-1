@@ -6,7 +6,7 @@
     {
         static void Main(string[] args)
         {
-          
+          //вфв
             double a = 2;
             double b = 1;
             double c = 3;

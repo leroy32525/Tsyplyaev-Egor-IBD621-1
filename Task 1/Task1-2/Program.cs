@@ -3,8 +3,18 @@
     internal class Program
     {
         static void Main(string[] args)
+<<<<<<< Updated upstream
         {
             Console.WriteLine("Hello, World!");
+=======
+        { 
+        console.WriteLine("dasefsfsdf" )
+
+       
+
+
+
+>>>>>>> Stashed changes
         }
     }
 }
