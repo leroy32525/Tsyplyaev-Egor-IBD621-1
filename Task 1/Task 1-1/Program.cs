@@ -2,7 +2,7 @@
 {
    {
     class Program
-        //вфвф
+        //вфвффвф
     {
         static void Main(string[] args)
         {
