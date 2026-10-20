@@ -2,6 +2,8 @@
 {
     internal class Program
     {
+<<<<<<< HEAD
+
 
   {       
             Console.Write("Введите число a: ");
@@ -16,12 +18,5 @@
             Console.ReadKey();
         }
 }
-            //  фафафавфвф
-
- 
-
- 
-           
-      
-
+//вфвфф
 
