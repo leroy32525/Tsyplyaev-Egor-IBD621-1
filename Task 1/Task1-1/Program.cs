@@ -26,7 +26,7 @@
             /// /// </summary>
             double y = numerator / denominator;
             /// <summary>
-            /// Вывод результата на экран
+            /// Вывод результата на экран функции
             /// /// </summary>
             Console.WriteLine($"Значение функции y = {y}");
             /// <summary>
