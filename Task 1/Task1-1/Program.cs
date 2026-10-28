@@ -30,7 +30,7 @@
             /// /// </summary>
             Console.WriteLine($"Значение функции y = {y}");
             /// <summary>
-            /// Округленние
+            /// Округленние функции
             /// /// </summary>
             Console.WriteLine($"Округленное значение y = {Math.Round(y, 4)}");
         }
