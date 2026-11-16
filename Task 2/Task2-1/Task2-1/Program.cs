@@ -2,11 +2,17 @@
 {
     class Program
     {
-        // Перечисляемый тип для выбора действия
+        /// <summary>
+        /// Перечисляемый тип для выбора вычисляемой линии.
+        /// </summary>
         public enum LineType
         {
-            Median,     // Медиана
-            Bisector    // Биссектриса
+            /// <summary> Линия не выбрана. </summary>
+            None,
+            /// <summary> Медиана. </summary>
+            Median,
+            /// <summary> Биссектриса. </summary>
+            Bisector
         }
 
         internal static class Program
@@ -20,62 +26,120 @@
                 Console.WriteLine("Выберите, что нужно найти:");
                 Console.WriteLine("1 - Медиану");
                 Console.WriteLine("2 - Биссектрису");
-                Console.Write("Ваш выбор: ");
 
-                int choice = int.Parse(Console.ReadLine());
-                LineType type = (choice == 2) ? LineType.Bisector : LineType.Median;
+                LineType type = GetLineTypeFromUser();
+
+                if (type == LineType.None)
+                {
+                    Console.WriteLine("Ошибка: неверно выбран тип линии. Завершение работы.");
+                    Console.ReadLine();
+                    return;
+                }
 
                 double a = GetNumber("Введите сторону a: ");
                 double b = GetNumber("Введите сторону b: ");
                 double c = GetNumber("Введите сторону c (к которой проводится линия): ");
 
-                // Проверка на существование треугольника
-                if (a + b <= c || a + c <= b || b + c <= a)
+                if (!IsTriangleValid(a, b, c))
                 {
                     Console.WriteLine("Ошибка: Треугольник с такими сторонами не существует!");
                 }
                 else
                 {
-                    double result = CalculateLine(a, b, c, type);
-                    string lineName = (type == LineType.Median) ? "Медиана" : "Биссектриса";
-                    Console.WriteLine($"{lineName} равна: {result:F4}");
+                    double result = 0;
+
+                    if (type == LineType.Median)
+                    {
+                        result = GetMedian(a, b, c);
+                    }
+                    else if (type == LineType.Bisector)
+                    {
+                        result = GetBisector(a, b, c);
+                    }
+
+                    // Выводим тип напрямую, так как в enum уже заданы понятные имена
+                    Console.WriteLine($"{type} равна: {result:F4}");
                 }
 
                 Console.ReadLine();
             }
 
             /// <summary>
-            /// Получает число.
+            /// Запрашивает у пользователя выбор типа линии и преобразует его в перечисление.
             /// </summary>
-            /// <param name="message">Сообщение пользователю.</param>
-            /// <returns>Число, введенное с клавиатуры.</returns>
-            static double GetNumber(string message = "")
+            /// <returns>Выбранный тип линии (Median, Bisector или None при ошибке).</returns>
+            static LineType GetLineTypeFromUser()
             {
-                Console.Write(message);
+                Console.Write("Ваш выбор: ");
                 string input = Console.ReadLine();
-                return double.Parse(input);
+
+                // Проверка на то, что введено целое число
+                if (int.TryParse(input, out int choice))
+                {
+                    // Убираем магические константы, используя явное приведение или проверки
+                    if (choice == 1) return LineType.Median;
+                    if (choice == 2) return LineType.Bisector;
+                }
+
+                return LineType.None;
             }
 
             /// <summary>
-            /// Вычисляет длину медианы или биссектрисы, проведённой к стороне c.
+            /// Проверяет существование треугольника по трем сторонам.
             /// </summary>
-            /// <param name="a">Первая сторона треугольника.</param>
-            /// <param name="b">Вторая сторона треугольника.</param>
-            /// <param name="c">Сторона, к которой проводится линия.</param>
-            /// <param name="type">Тип вычисляемой линии (Медиана или Биссектриса).</param>
-            /// <returns>Длина медианы или биссектрисы.</returns>
-            static double CalculateLine(double a, double b, double c, LineType type)
+            /// <param name="a">Первая сторона.</param>
+            /// <param name="b">Вторая сторона.</param>
+            /// <param name="c">Третья сторона.</param>
+            /// <returns>True, если треугольник существует, иначе False.</returns>
+            static bool IsTriangleValid(double a, double b, double c)
             {
-                if (type == LineType.Median)
+                return (a + b > c) && (a + c > b) && (b + c > a);
+            }
+
+            /// <summary>
+            /// Получает число с клавиатуры с проверкой на корректность ввода.
+            /// </summary>
+            /// <param name="message">Сообщение пользователю.</param>
+            /// <returns>Введенное число.</returns>
+            static double GetNumber(string message = "")
+            {
+                double number;
+                while (true)
                 {
-                    // Формула медианы: 0.5 * sqrt(2a^2 + 2b^2 - c^2)
-                    return 0.5 * Math.Sqrt(2 * a * a + 2 * b * b - c * c);
+                    Console.Write(message);
+                    string input = Console.ReadLine();
+
+                    // Проверяем, что введено именно число
+                    if (double.TryParse(input, out number))
+                    {
+                        return number;
+                    }
+                    Console.WriteLine("Ошибка: введите корректное число.");
                 }
-                else
-                {
-                    // Формула биссектрисы: sqrt(a * b - a * b * (c^2 / (a + b)^2))
-                    return Math.Sqrt(a * b - a * b * (c * c / Math.Pow(a + b, 2)));
-                }
+            }
+
+            /// <summary>
+            /// Вычисляет длину медианы, проведенной к стороне c.
+            /// </summary>
+            /// <param name="a">Первая сторона.</param>
+            /// <param name="b">Вторая сторона.</param>
+            /// <param name="c">Сторона, к которой проведена медиана.</param>
+            /// <returns>Длина медианы.</returns>
+            static double GetMedian(double a, double b, double c)
+            {
+                return 0.5 * Math.Sqrt(2 * a * a + 2 * b * b - c * c);
+            }
+
+            /// <summary>
+            /// Вычисляет длину биссектрисы, проведенной к стороне c.
+            /// </summary>
+            /// <param name="a">Первая сторона.</param>
+            /// <param name="b">Вторая сторона.</param>
+            /// <param name="c">Сторона, к которой проведена биссектриса.</param>
+            /// <returns>Длина биссектрисы.</returns>
+            static double GetBisector(double a, double b, double c)
+            {
+                return Math.Sqrt(a * b - a * b * (c * c / Math.Pow(a + b, 2)));
             }
         }
     }
