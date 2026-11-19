@@ -23,10 +23,10 @@
             /// <param name="args">Список формальных параметров.</param>
             static void Main(string[] args)
             {
-                Console.WriteLine("Выберите, что нужно найти:");
-                Console.WriteLine("1 - Медиану");
-                Console.WriteLine("2 - Биссектрису");
+                // Выводим доступные варианты, используя имена из enum
+                Console.WriteLine($"Выберите, что нужно найти ({LineType.Median} или {LineType.Bisector}):");
 
+                // Получаем тип напрямую через парсинг enum
                 LineType type = GetLineTypeFromUser();
 
                 if (type == LineType.None)
@@ -46,26 +46,23 @@
                 }
                 else
                 {
-                    double result = 0;
-
-                    if (type == LineType.Median)
+                    // Используем switch-case, как просила преподаватель
+                    switch (type)
                     {
-                        result = GetMedian(a, b, c);
+                        case LineType.Median:
+                            Console.WriteLine($"{type} равна: {GetMedian(a, b, c):F4}");
+                            break;
+                        case LineType.Bisector:
+                            Console.WriteLine($"{type} равна: {GetBisector(a, b, c):F4}");
+                            break;
                     }
-                    else if (type == LineType.Bisector)
-                    {
-                        result = GetBisector(a, b, c);
-                    }
-
-                    // Выводим тип напрямую, так как в enum уже заданы понятные имена
-                    Console.WriteLine($"{type} равна: {result:F4}");
                 }
 
                 Console.ReadLine();
             }
 
             /// <summary>
-            /// Запрашивает у пользователя выбор типа линии и преобразует его в перечисление.
+            /// Запрашивает у пользователя тип линии. Ожидает ввода имени из перечисления (Median или Bisector).
             /// </summary>
             /// <returns>Выбранный тип линии (Median, Bisector или None при ошибке).</returns>
             static LineType GetLineTypeFromUser()
@@ -73,12 +70,11 @@
                 Console.Write("Ваш выбор: ");
                 string input = Console.ReadLine();
 
-                // Проверка на то, что введено целое число
-                if (int.TryParse(input, out int choice))
+                // Используем Enum.TryParse для прямого преобразования строки в перечисление.
+                // Параметр true позволяет вводить текст в любом регистре (median, MEDIAN и т.д.)
+                if (Enum.TryParse(input, true, out LineType type) && type != LineType.None)
                 {
-                    // Убираем магические константы, используя явное приведение или проверки
-                    if (choice == 1) return LineType.Median;
-                    if (choice == 2) return LineType.Bisector;
+                    return type;
                 }
 
                 return LineType.None;
@@ -109,7 +105,6 @@
                     Console.Write(message);
                     string input = Console.ReadLine();
 
-                    // Проверяем, что введено именно число
                     if (double.TryParse(input, out number))
                     {
                         return number;
