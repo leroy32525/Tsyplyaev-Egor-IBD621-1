@@ -28,7 +28,7 @@
             /// Получаем тип данных
             LineType type = GetLineTypeFromUser();
 
-            if (type == LineType.None)
+            if (type != LineType.Median && type != LineType.Bisector)
             {
                 Console.WriteLine("неверно выбран тип линии.");
                 Console.ReadLine();
