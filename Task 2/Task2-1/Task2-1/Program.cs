@@ -22,10 +22,8 @@
         /// <param name="args">Список формальных параметров</param>
         static void Main(string[] args)
         {
-            /// Выводим доступные варианты
             Console.WriteLine($"Выберите, что нужно найти ({LineType.Median} или {LineType.Bisector}):");
 
-            /// Получаем тип данных
             LineType type = GetLineTypeFromUser();
 
             if (type != LineType.Median && type != LineType.Bisector)
