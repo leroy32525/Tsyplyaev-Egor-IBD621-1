@@ -97,8 +97,12 @@
             {
                 Console.Write(message);
                 string input = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(input))
+                {
+                    Console.WriteLine("Строка не может быть пустой");
+                    continue;
 
-                if (double.TryParse(input, out number))
+                    if (double.TryParse(input, out number))
                 {
                     return number;
                 }
